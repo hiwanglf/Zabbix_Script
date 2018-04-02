@@ -2,21 +2,27 @@
 # written by lengtoo
 
 ##
-echo “1.上载软件包”
-
-echo “2.安装软件”
-rpm -ivh bc-1.06.95-13.el7.x86_64.rpm
-rpm -ivh libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm
-rpm -ivh unixODBC-2.2.14-12.el6_3.x86_64.rpm
-rpm -ivh zabbix-agent-3.0.1-2.el6.x86_64.rpm
-rpm -ivh lm_sensors-libs-3.4.0-4.20160601gitf9185e5.el7.x86_64.rpm
-rpm -ivh sysstat-10.1.5-11.el7.x86_64.rpm
+rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
+yum install zabbix-agent -y -y
 
 
-echo “3.删除上载的软件包”
-rm -f sysstat-10.1.5-11.el7.x86_64.rpm zabbix-agent-3.0.1-2.el6.x86_64\(1\).rpm lm_sensors-libs-3.4.0-4.20160601gitf9185e5.el7.x86_64.rpm
-rm -f bc-1.06.95-13.el7.x86_64.rpm libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm unixODBC-2.2.14-12.el6_3.x86_64.rpm zabbix-agent-3.0.1-2.el6.x86_64\(1\).rpm
-rm -f zabbix-agent-3.0.1-2.el6.x86_64.rpm
+
+# echo “2.安装软件”
+# rpm -ivh ~/bc-1.06.95-13.el7.x86_64.rpm
+# rpm -ivh ~/libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm
+# rpm -ivh ~/unixODBC-2.2.14-12.el6_3.x86_64.rpm
+# rpm -ivh ~/zabbix-agent-3.0.1-2.el6.x86_64.rpm
+# rpm -ivh ~/lm_sensors-libs-3.4.0-4.20160601gitf9185e5.el7.x86_64.rpm
+# rpm -ivh ~/sysstat-10.1.5-11.el7.x86_64.rpm
+#
+#
+# echo “3.删除上载的软件包”
+# rm -f ~/sysstat-10.1.5-11.el7.x86_64.rpm zabbix-agent-3.0.1-2.el6.x86_64\(1\).rpm
+# rm -f ~/lm_sensors-libs-3.4.0-4.20160601gitf9185e5.el7.x86_64.rpm
+# rm -f ~/bc-1.06.95-13.el7.x86_64.rpm libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm
+# rm -f ~/unixODBC-2.2.14-12.el6_3.x86_64.rpm
+# rm -f ~/zabbix-agent-3.0.1-2.el6.x86_64\(1\).rpm
+# rm -f ~/zabbix-agent-3.0.1-2.el6.x86_64.rpm
 systemctl start sysstat
 
 
