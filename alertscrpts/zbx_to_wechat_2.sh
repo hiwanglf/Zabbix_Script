@@ -23,25 +23,27 @@ SECRECT=$2
 URL_TOKEN="https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$CORPID&corpsecret=$SECRECT"
 #通过HTTP GET方式获取ACCESS_TOKEN
 ACCESS_TOKEN=`/usr/bin/curl -s -G $URL_TOKEN | awk -F\" '{print $10}'` >>/var/log/zabbix/zabbix_alert.log
+echo $ACCESS_TOKEN
 URL_POST="https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$ACCESS_TOKEN"
-#创建函数，生成格式化的消息体
+echo $URL_POST
 
+#创建函数，生成格式化的消息体
 function CONTENT(){
-		# 需要发送给的AGENTID
-		local AGENTID=$1
-		# 需要发送消息的部门ID
-		local PARTIES=$2
-		# 需要发送的用户
-		local USERS=$3
-		# TAG
-		local TAG=$4
-		# 消息内容
+	# 需要发送给的AGENTID
+	local AGENTID=$1
+	# 需要发送消息的部门ID
+	local PARTIES=$2
+	# 需要发送的用户
+	local USERS=$3
+	# TAG
+	local TAG=$4
+	# 消息内容
         local MSG=$(echo "$5")
         printf '{\n'
         printf '\t"touser"   : "'$USERS'\" ,\n'
         printf '\t"toparty"  : "'$PARTIES'\" ,\n'
         printf '\t"togag"    : "'"$TAG"'\" ,\n'
-		printf '\t"msgtype"  : "text",\n'
+	printf '\t"msgtype"  : "text",\n'
         printf '\t"agentid"  : '$AGENTID',\n'
         printf '\t"text"     : {\n'
         printf '\t\t"content": "'"$MSG"\"'\n'
@@ -56,4 +58,4 @@ echo $(date)  >> /var/log/zabbix/zabbix_alert.log
 
 CONTENT $3 $4 $5 $6 $7 >>  /var/log/zabbix/zabbix_alert.log
 #发送状态写入日志
-STATUS=`/usr/bin/curl --data-ascii "$(CONTENT $1 $2 $3)" $URL_POST` >> /var/log/zabbix/zabbix_alert.log
+STATUS=`/usr/bin/curl --data-ascii "$(CONTENT $3 $4 $5 $6 $7)" $URL_POST` >> /var/log/zabbix/zabbix_alert.log
