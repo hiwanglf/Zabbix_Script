@@ -3,6 +3,7 @@
 import urllib2
 import json
 import sys
+import datetime
 # 默认编码为ascii，转换成utf-8，否则会报错
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -51,8 +52,21 @@ dict_content = {
    },
    "safe":0
 }
-# 将字典转换为字符串
-str_content = json.dumps(dict_content)
+# 将字典转换为字符串，并转码
+str_content = json.dumps(dict_content).decode('unicode_escape')
 # 使用post，将消息体推送到服务器
 request_data = urllib2.Request(send_url, data=str_content)
 post_data = urllib2.urlopen(request_data)
+# 日志记录
+def save_to_file(file_name, contents):
+    f = open(file_name, 'a+')
+    f.write(contents)
+    f.close()
+
+# 保存告警日志信息文件路径
+alert_log_file = "/Users/lengtoo/PycharmProjects/zbx_alert/zabbix_alerts.log"
+
+cur_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+save_to_file(alert_log_file, "\n-------------------------\n")
+save_to_file(alert_log_file, cur_time)
+save_to_file(alert_log_file, str_content)
