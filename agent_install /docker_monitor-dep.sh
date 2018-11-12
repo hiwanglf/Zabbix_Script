@@ -1,8 +1,4 @@
 #!/bin/bash
-
-###########################
-Docker Monitor
-###########################
 DOCKER=`docker ps | awk -F ' ' '{print "\t""\047"  $1 "\047"    ": " "\047" $NF "\047," }'`
 mkdir /etc/zabbix/zabbix_agentd.d/docker
 cat > /etc/zabbix/zabbix_agentd.d/docker/instance.py << EOF
@@ -20,7 +16,6 @@ EOF
 
 docker ps | awk -F ' ' '{print "\t""\047"  $1 "\047"    ": " "\047" $NF "\047," }' > /etc/zabbix/zabbix_agentd.d/docker/container.list
 cat /etc/zabbix/zabbix_agentd.d/docker/container.list >> /etc/zabbix/zabbix_agentd.d/docker/instance.py
-
 cat >> /etc/zabbix/zabbix_agentd.d/docker/instance.py << EOF
 }
 
@@ -42,24 +37,28 @@ else:
 EOF
 
 cat > /etc/zabbix/zabbix_agentd.d/docker/status.sh << EOF
-#! /bin/bash
+    #! /bin/bash
+    #-----------------------------------------------------------------------------------------------
+    # auth:lengtoo
+    # date:2017-06-26
+    # des:for monitor docker service status
+    # path:/etc/zabbix/zabbix_agentd.d/docker
+    #-----------------------------------------------------------------------------------------------
+    ## 1= has docker process
+    ## 0= no docker process
+    status=(\`sudo systemctl status docker | grep "active (running)" | wc -l\`)
 
-# by lengtoo
-# date 2017 6 26
-## 1= has docker process
-## 0= no docker process
-status=sudo systemctl status docker | grep "active (running)" | wc -l
-
-echo $status;
+    echo \$status;
 EOF
 
 cat >  /etc/zabbix/zabbix_agentd.d/userparameter_docker.conf << EOF
-UserParameter=docker.service.status, /bin/bash /etc/zabbix/zabbix_agentd.d/docker/status.sh
-UserParameter=docker.service.instance, /usr/bin/python /etc/zabbix/zabbix_agentd.d/docker/instance.py
+    UserParameter=docker.service.status, /bin/bash /etc/zabbix/zabbix_agentd.d/docker/status.sh
+    UserParameter=docker.service.instance, /usr/bin/python /etc/zabbix/zabbix_agentd.d/docker/instance.py
 EOF
 
 chmod +x /etc/zabbix/zabbix_agentd.d/docker/status.sh
 chmod +x /etc/zabbix/zabbix_agentd.d/docker/instance.py
+
 systemctl stop zabbix-agent
 systemctl start zabbix-agent
 systemctl status zabbix-agent
